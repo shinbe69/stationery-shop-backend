@@ -32,7 +32,7 @@ router.post('/login', async (req,res) => {
             if (isCorrect) {
                 res.setHeader('Access-Control-Allow-Origin', '*')
                 res.cookie('JWT', generateJWT({username: inputID}), { httpOnly: true, maxAge: 60*15*1000 })
-                res.status(200).json(user)
+                res.sendStatus(200)
             }
             else res.sendStatus(400)
         })

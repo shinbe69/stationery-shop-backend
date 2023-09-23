@@ -36,12 +36,15 @@ router.post('/getProducts', (req, res) => {
     })
     .catch(error => console.log(error))
 })
-//Get a product with specific id
-router.post('/getSpecificProduct', (req, res) => {
-    Product.findById(req.body.productID)
-    .then(async product => {
-        product.thumnail = await 'data:image/jpg;base64,' + services.base64_encode(path.resolve(product.thumnail))
-        res.json(product)
+//Get a product with specific id(s)
+router.post('/getProductsById', (req, res) => {
+    console.log(req.body.productID)
+    Product.find({_id : req.body.productID})
+    .then(products => {
+        products.forEach((product) => {
+            product.thumnail = 'data:image/jpg;base64,' + services.base64_encode(path.resolve(product.thumnail))
+        })
+        res.json(products)
     })
     .catch(error => console.log(error))
 })

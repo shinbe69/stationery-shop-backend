@@ -31,7 +31,9 @@ router.post('/login', async (req,res) => {
             if (err) throw err
             if (isCorrect) {
                 res.setHeader('Access-Control-Allow-Origin', '*')
-                res.cookie('JWT', generateJWT({username: inputID}), { httpOnly: true, maxAge: 60*15*1000 })
+                res.cookie('JWT', generateJWT({username: inputID, userID: user[0]._id}), { httpOnly: true, maxAge: 60*60*24*1000 })
+                res.cookie('user', inputID, { maxAge: 60*60*24*1000 })
+                user[0].isAdmin ? res.cookie('isAdmin', true, { maxAge: 60*60*24*1000 }) : {}
                 res.sendStatus(200)
             }
             else res.sendStatus(400)

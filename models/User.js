@@ -4,7 +4,11 @@ const Schema = mongoose.Schema
 const User = new Schema({
     userName: String,
     dob: {type: Date, default: null},
-    cart: {type: Object, default: []},
+    cart: {
+        cartItems: {type: Object, default: []},
+        totalQuantity: {type: Number, default: 0}
+    },
+    isAdmin: {type: Boolean, default: false},
     createAt: { type: Date, default: Date.now }
 })
 

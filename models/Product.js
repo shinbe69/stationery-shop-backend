@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
@@ -6,7 +7,10 @@ const Product = new Schema({
     description: String,
     price: String,
     createAt: { type: Date, default: Date.now },
-    thumnail: String
+    thumnail: String,
+    quantity: Number,
+    additionalInfo: String,
+    category: ObjectId
 })
 
 module.exports = mongoose.model('Product', Product)

@@ -1,17 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const { error } = require('console')
 const user = require('./user')
 const product = require('./product')
 const login = require('./login')
 const Category = require('../models/Category')
 const services = require('./services')
-const Banner = require('../models/Banner')
 const Product = require('../models/Product')
 
 router.use('/api/products', product)
-router.use('/api/users', user)
+router.use('/api/users', services.checkToken, user)
 router.use('/api/auth', login)
 
 router.get('/api/getCategories', (req, res) => {
@@ -22,12 +20,6 @@ router.get('/api/getCategories', (req, res) => {
         })
         res.json(categories)
     })
-    .catch(error => console.log(error))
-})
-
-router.get('/api/getBanners', (req, res) => {
-    Banner.find({})
-    .then(banners => res.json(banners))
     .catch(error => console.log(error))
 })
 //Search API

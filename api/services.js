@@ -15,7 +15,7 @@ function generateJWT(id) {
     return jwt.sign(id, process.env.SECRET, {expiresIn: '900s'})
 }
 //CHECKING IF A JWT IS VALID
-function checkToken(req,res, next) {
+function checkToken(req, res, next) {
     if (typeof req.cookies.JWT !== 'undefined') {
         const token = req.cookies.JWT
         //OTHERWISE, CHECK IF THE TOKEN IS VALID
@@ -23,11 +23,18 @@ function checkToken(req,res, next) {
             //IF JWT IS NOT VALID, RETURN 403
             if (err) return res.sendStatus(403)
             //OTHERWISE CALL next() TO INDICATE APP TO CONTINUE
-            res.cookie('user', decoded.username)
+            next()
         })
     }
+    else
+        res.sendStatus(403)
+}
+
+function checkAdmin(req, res, next) {
+    checkToken(req, res, next)
+    console.log('ok')
     next()
 }
 
 
-module.exports = { base64_encode, generateJWT, checkToken}
+module.exports = { base64_encode, generateJWT, checkToken, checkAdmin}

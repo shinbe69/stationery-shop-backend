@@ -7,13 +7,6 @@ const Login = require('../models/Login')
 const User = require('../models/User')
 const { generateJWT } = require('./services')
 
-//Get Users
-router.get('/getLogins',  (req, res) => {
-    Login.find({})
-    .then(users => res.json(users))
-    .catch(error => console.log(error))
-})
-
 //Login
 router.post('/login', async (req,res) => {
     let inputID = req.body.username

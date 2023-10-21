@@ -9,6 +9,7 @@ const Product = new Schema({
     createAt: { type: Date, default: Date.now },
     thumnail: String,
     quantity: Number,
+    soldQuantity: { type: Number, default: 0 },
     additionalInfo: String,
     category: ObjectId
 })

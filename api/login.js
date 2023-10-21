@@ -42,27 +42,30 @@ router.post('/login', async (req,res) => {
 })
 //Sign up
 router.post('/signup', async (req,res) => {
-    //front-end will manage if the username or password was undefined or not
-    let inputID = req.body.username
-    let user = await User.find({ userName: inputID })
-    //if the id user submit is not exist in database, create new login record
-    if (typeof user[0] === 'undefined') {
-        bcrypt.hash(JSON.stringify(req.body.password), salt, async (err, hash) => {
-            if (err) throw err
-            //if the operation succeed, return status 200
-            user = await User.create({userName: inputID})
-            if (user) {
-                if (await Login.create({ userID: user._id, password: hash }))
-                    res.sendStatus(200)
-                else
+    let userName = req.body.username
+    let password = req.body.password
+    if (typeof userName !== 'undefined' && typeof password !== 'undefined') {
+        let user = await User.find({ userName })
+        if (typeof user[0] === 'undefined') {
+            bcrypt.hash(JSON.stringify(req.body.password), salt, async (err, hash) => {
+                if (err) {
                     res.sendStatus(500)
-            }
-                
-            // else res.sendStatus(507)
-        })
+                    throw err
+                }
+                else {
+                    user = await User.create({userName})
+                    if (user) {
+                        if (await Login.create({ userID: user._id, password: hash }))
+                            res.json(user)
+                        else
+                            res.sendStatus(500)
+                    }
+                }
+            })
+        }
+        else res.sendStatus(409)
     }
-    //otherwise, send status 409
-    else res.sendStatus(409)
+    else res.sendStatus(400)
 })
 //Log out
 router.post('/logout', (req, res) => {

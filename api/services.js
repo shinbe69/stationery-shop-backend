@@ -32,7 +32,7 @@ function checkToken(req, res, next) {
 
 function checkAdmin(req, res, next) {
     checkToken(req, res, next)
-    console.log('ok')
+    if ( !req.cookies.isAdmin) res.sendStatus(403)
     next()
 }
 

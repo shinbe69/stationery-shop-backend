@@ -4,23 +4,37 @@ const path = require('path')
 const user = require('./user')
 const product = require('./product')
 const login = require('./login')
+const order = require('./order')
 const Category = require('../models/Category')
 const services = require('./services')
 const Product = require('../models/Product')
 
 router.use('/api/products', product)
 router.use('/api/users', services.checkToken, user)
+router.use('/api/orders', services.checkToken, order)
 router.use('/api/auth', login)
 
 router.get('/api/getCategories', (req, res) => {
     Category.find({})
-    .then(categories => {
-        categories.forEach((category) => {
-            category.thumnail = 'data:image/jpg;base64,' + services.base64_encode(path.resolve(category.thumnail))
-        })
-        res.json(categories)
-    })
+    .then(categories => res.json(categories))
     .catch(error => console.log(error))
+})
+
+router.post('/api/createCategory', async (req, res) => {
+    let name = req.body.name
+    let thumnail = req.body.thumnail
+    if (typeof name !== 'undefined' && typeof thumnail !== 'undefined') {
+        let category = await Category.findOne({ name })
+        if (!category) {
+            Category.create({ name, thumnail })
+            .then(() => res.sendStatus(200))
+            .catch(err => {
+                console.log(err)
+            })
+        }
+        else res.sendStatus(409)
+    }
+    else res.sendStatus(400)
 })
 //Search API
 router.post('/api/search', async (req, res) => {

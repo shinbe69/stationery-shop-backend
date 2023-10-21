@@ -3,6 +3,37 @@ const router = express.Router()
 const User = require('../models/User')
 let totalQuantity
 
+//Get user info 
+router.post('/getUser', (req, res) => {
+  User.findOne({userName: req.body.username})
+  .then(user => {
+    res.json(user)
+    })
+    .catch(error => {
+    console.log(error)
+    res.sendStatus(400)
+  })
+})
+//Update user info
+router.patch('/updateUser', (req, res) => {
+  console.log(req.body.username)
+  User.findOne({userName: req.body.username})
+  .then(user => {
+    let address = req.body.address
+    let dob = req.body.dob
+    let gender = req.body.gender
+    let phoneNumber = req.body.phoneNumber
+    if (typeof address !== 'undefined' && typeof dob !== 'undefined' && typeof gender !== 'undefined' && typeof phoneNumber !== 'undefined') {
+      user.updateOne({ address, dob, gender, phoneNumber})
+      .then(user => res.sendStatus(200))
+      .catch(error => console.log(error))
+    }
+    else res.sendStatus(400)
+  }).catch(error => {
+    console.log(error)
+    res.sendStatus(400)
+  })
+})
 //Add item(s) to cart
 router.patch('/addToCart', (req, res) => {
   User.findOne({userName: req.body.username})
@@ -20,6 +51,7 @@ router.patch('/addToCart', (req, res) => {
       .catch(error => console.log(error))
     }
   })
+  .catch(error => console.log(error))
 })
 
 //Remove item(s) from cart
@@ -53,6 +85,7 @@ router.patch('/removeFromCart', (req, res) => {
     else res.sendStatus(400)
   })
 })
+
 
 function mergeCart(accumulator, currentValue) {
   let isMerge = false

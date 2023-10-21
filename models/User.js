@@ -9,6 +9,9 @@ const User = new Schema({
         totalQuantity: {type: Number, default: 0}
     },
     isAdmin: {type: Boolean, default: false},
+    phoneNumber: { type: String, default: '' },
+    address: { type: String, default: '' },
+    gender: { type: String, default: '' },
     createAt: { type: Date, default: Date.now }
 })
 

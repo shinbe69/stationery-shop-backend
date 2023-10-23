@@ -7,14 +7,23 @@ const User = require('../models/User')
 
 //Get Products
 router.get('/getOrders',  (req, res) => {
-    Order.find({})
-    .then(products => {
-        res.json(products)
-    })
-    .catch(error => console.log(error))
+    if(!req.cookies.isAdmin) {
+        Order.find({user: req.cookies.user})
+        .then(products => {
+            res.json(products)
+        })
+        .catch(error => console.log(error))
+    }
+    else {
+        Order.find({})
+        .then(products => {
+            res.json(products)
+        })
+        .catch(error => console.log(error))
+    }
 })
 //Get a product with specific id(s)
-router.post('/getOrdersById', (req, res) => {
+router.post('/getOrders', (req, res) => {
     Order.find({_id : req.body.orderID})
     .then(orders => {
         res.json(orders)
@@ -47,15 +56,21 @@ router.post('/createOrder', (req, res) => {
 })
 //Confirm order
 router.patch('/confirmOrder', (req, res) => {
-    Order.findOne({ _id: req.body.orderID })
+    let orderID = req.body.orderID
+    if (!orderID) {
+        res.sendStatus(400)
+    }
+    else {
+        Order.findOne({ _id: orderID })
     .then(order => {
         order.updateOne({ status: 'confirmed' })
         .then(() => res.sendStatus(200))
         .catch(error => console.log(error))
     }).catch(error => {
-        console.log(err)
+        console.log(error)
         res.sendStatus(400)
     })
+    }
 })
 
 module.exports = router

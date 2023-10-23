@@ -16,12 +16,13 @@ function generateJWT(id) {
 }
 //CHECKING IF A JWT IS VALID
 function checkToken(req, res, next) {
-    if (typeof req.cookies.JWT !== 'undefined') {
+    if (typeof req.cookies.JWT !== 'undefined' && typeof req.cookies.user !== 'undefined') {
         const token = req.cookies.JWT
+        const username = req.cookies.user
         //OTHERWISE, CHECK IF THE TOKEN IS VALID
         jwt.verify(token, process.env.SECRET, (err, decoded) => {
             //IF JWT IS NOT VALID, RETURN 403
-            if (err) return res.sendStatus(403)
+            if (err || decoded.username !== username) return res.sendStatus(403)
             //OTHERWISE CALL next() TO INDICATE APP TO CONTINUE
             next()
         })

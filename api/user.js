@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
+const Order = require('../models/Order')
 let totalQuantity
 
 //Get user info 
@@ -16,15 +17,14 @@ router.post('/getUser', (req, res) => {
 })
 //Update user info
 router.patch('/updateUser', (req, res) => {
-  console.log(req.body.username)
   User.findOne({userName: req.body.username})
   .then(user => {
     let address = req.body.address
     let dob = req.body.dob
     let gender = req.body.gender
     let phoneNumber = req.body.phoneNumber
-    if (typeof address !== 'undefined' && typeof dob !== 'undefined' && typeof gender !== 'undefined' && typeof phoneNumber !== 'undefined') {
-      user.updateOne({ address, dob, gender, phoneNumber})
+    if (typeof address !== 'undefined' && typeof phoneNumber !== 'undefined') {
+      user.updateOne((typeof dob !== 'undefined' && typeof gender !== 'undefined') ? { address, dob, gender, phoneNumber} : { address, phoneNumber})
       .then(user => res.sendStatus(200))
       .catch(error => console.log(error))
     }

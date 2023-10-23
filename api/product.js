@@ -4,6 +4,7 @@ const path = require('path')
 const { ObjectId } = require('mongodb')
 const Product = require('../models/Product')
 const { checkAdmin } = require('./services')
+const { error } = require('console')
 
 //Get Products
 router.get('/getProducts',  (req, res) => {
@@ -14,12 +15,15 @@ router.get('/getProducts',  (req, res) => {
     .catch(error => console.log(error))
 })
 //Get popular item base on quantity of sale
-router.get('/getPopular', async (req, res) => {
+router.get('/getBestSelling', async (req, res) => {
     Product.find()
-    .sort({quantity: 'desc'})
+    .sort({soldQuantity: 'desc'})
     .limit(5)
     .then(topItem => {
         res.json(topItem)
+    }).catch(error => {
+        console.log(error)
+        res.sendStatus(500)
     })
 })
 //Get products with the specific type

@@ -8,7 +8,7 @@ const { error } = require('console')
 
 //Get Products
 router.get('/getProducts',  (req, res) => {
-    Product.find({})
+    Product.find().sort({ createAt: 'desc' }).limit(10)
     .then(products => {
         res.json(products)
     })

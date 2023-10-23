@@ -12,7 +12,7 @@ function base64_encode(file) {
 
 //GENERATE JWT WITH SPECIFIED ID
 function generateJWT(id) {
-    return jwt.sign(id, process.env.SECRET, {expiresIn: '900s'})
+    return jwt.sign(id, process.env.SECRET, {expiresIn: '86400s'})
 }
 //CHECKING IF A JWT IS VALID
 function checkToken(req, res, next) {
@@ -32,7 +32,7 @@ function checkToken(req, res, next) {
 }
 
 function checkAdmin(req, res, next) {
-    checkToken(req, res, next)
+    console.log(req.cookies.JWT)
     if ( !req.cookies.isAdmin) res.sendStatus(403)
     next()
 }

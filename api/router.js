@@ -6,12 +6,12 @@ const product = require('./product')
 const login = require('./login')
 const order = require('./order')
 const Category = require('../models/Category')
-const services = require('./services')
+const { checkToken, checkAdmin } = require('../api/services')
 const Product = require('../models/Product')
 
 router.use('/api/products', product)
-router.use('/api/users', services.checkToken, user)
-router.use('/api/orders', services.checkToken, order)
+router.use('/api/users', checkToken, user)
+router.use('/api/orders', checkToken, order)
 router.use('/api/auth', login)
 
 router.get('/api/getCategories', (req, res) => {

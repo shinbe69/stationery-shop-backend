@@ -7,33 +7,59 @@ const { checkAdmin } = require('./services')
 const { error } = require('console')
 
 //Get Products
-router.get('/getProducts',  (req, res) => {
-    Product.find().sort({ createAt: 'desc' }).limit(10)
-    .then(products => {
-        res.json(products)
-    })
-    .catch(error => console.log(error))
+router.post('/getProducts',  (req, res) => {
+    let filter = req.body.filter
+    let category = req.body.category
+    if (!filter || filter === 'default') {
+        Product.find(category ? { category }: {} )
+        .then(products => {
+            res.json(products)
+        })
+        .catch(error => console.log(error))
+    }
+    else {
+        switch (filter) {
+            case 'increase':
+                Product.find(category ? { category }: {} )
+                .sort({ price: 'ascending' })
+                .then(products => res.json(products))
+                .catch(error => {
+                    console.log(error)
+                    res.sendStatus(500)
+                })
+                break
+            case 'decrease':
+                Product.find(category ? { category }: {} )
+                .sort({ price: 'descending' })
+                .then(products => res.json(products))
+                .catch(error => {
+                    console.log(error)
+                    res.sendStatus(500)
+                })
+                break
+            case 'bestsell':
+                Product.find(category ? { category }: {} )
+                .sort({ soldQuantity: 'descending' })
+                .then(products => res.json(products))
+                .catch(error => {
+                    console.log(error)
+                    res.sendStatus(500)
+                })
+                break
+            case 'recently':
+                Product.find(category ? { category }: {} )
+                .sort({ createAt: 'descending' })
+                .then(products => res.json(products))
+                .catch(error => {
+                    console.log(error)
+                    res.sendStatus(500)
+                })
+                break
+        }
+    }
+
 })
-//Get popular item base on quantity of sale
-router.get('/getBestSelling', async (req, res) => {
-    Product.find()
-    .sort({soldQuantity: 'desc'})
-    .limit(5)
-    .then(topItem => {
-        res.json(topItem)
-    }).catch(error => {
-        console.log(error)
-        res.sendStatus(500)
-    })
-})
-//Get products with the specific type
-router.post('/getProductsByCategory', (req, res) => {
-    Product.find({ category: new ObjectId( req.body.categoryId) })
-    .then(products => {
-        res.json(products)
-    })
-    .catch(error => console.log(error))
-})
+
 //Get a product with specific id(s)
 router.post('/getProductsById', (req, res) => {
     Product.find({_id : req.body.productID})

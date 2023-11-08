@@ -44,7 +44,7 @@ router.post('/api/search', async (req, res) => {
     let searchKey = req.body.searchInput
     products.forEach(product => {
         if ((product.name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(searchKey))
-            results.push({name: product.name, id: product.id})
+            results.push(product)
     })
     res.json(results)
 })

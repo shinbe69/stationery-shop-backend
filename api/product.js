@@ -66,7 +66,10 @@ router.post('/getProductsById', (req, res) => {
     .then(products => {
         res.json(products)
     })
-    .catch(error => console.log(error))
+    .catch(error => {
+        console.log(error)
+        res.sendStatus(400)
+    })
 })
 //Post a products
 router.post('/createProduct', (req, res) => {

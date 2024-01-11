@@ -11,7 +11,7 @@ const Product = require('../models/Product')
 
 router.use('/api/products', product)
 router.use('/api/users', checkToken, user)
-router.use('/api/orders', checkToken, order)
+router.use('/api/orders', order)
 router.use('/api/auth', login)
 
 router.get('/api/getCategories', (req, res) => {

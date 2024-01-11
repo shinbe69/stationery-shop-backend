@@ -40,6 +40,7 @@ router.post('/getProducts',  (req, res) => {
             case 'bestsell':
                 Product.find(category ? { category }: {} )
                 .sort({ soldQuantity: 'descending' })
+                .limit(5)
                 .then(products => res.json(products))
                 .catch(error => {
                     console.log(error)
@@ -47,8 +48,10 @@ router.post('/getProducts',  (req, res) => {
                 })
                 break
             case 'recently':
+                let limit = req.body.limit ? req.body.limit : true
                 Product.find(category ? { category }: {} )
                 .sort({ createAt: 'descending' })
+                .limit(limit)
                 .then(products => res.json(products))
                 .catch(error => {
                     console.log(error)

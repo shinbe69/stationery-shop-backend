@@ -30,29 +30,22 @@ router.post('/getOrders', (req, res) => {
     })
     .catch(error => console.log(error))
 })
-//Post a products
+//Create an order
 router.post('/createOrder', (req, res) => {
-    let username = req.body.username
+    let phone = req.body.phone
     let items = req.body.items
     let value = req.body.value
     let address = req.body.address
-    User.findOne({ userName: username })
-    .then(() => {
-        if (typeof items !== 'undefined' && typeof value !== 'undefined' && typeof address !== 'undefined') {
-            Order.create({ items, value, address, user: username })
-            .then(order => {
-                res.json(order._id)
-            })
-            .catch(error => console.log(error))
-        }
-        else {
-            res.sendStatus(400)
-        }
-    })
-    .catch(error => {
-        console.log(err)
+    if (typeof items !== 'undefined' && typeof value !== 'undefined' && typeof phone !== 'undefined') {
+        Order.create({ items, value, phone })
+        .then(order => {
+            res.json(order._id)
+        })
+        .catch(error => console.log(error))
+    }
+    else {
         res.sendStatus(400)
-    })
+    }
 })
 //Confirm order
 router.patch('/confirmOrder', (req, res) => {
@@ -70,6 +63,36 @@ router.patch('/confirmOrder', (req, res) => {
         console.log(error)
         res.sendStatus(400)
     })
+    }
+})
+//Update order
+router.patch('/updateOrder', (req, res) => {
+    let orderID = req.body.orderID
+    let phone = req.body.phone
+    let address = req.body.address
+
+    if (!orderID) {
+        res.sendStatus(400)
+    }
+    else {
+        Order.findOne({ _id: orderID })
+        .then(order => {
+            if (!phone || !address) {
+                if (order.status !== 'confirmed')
+                    order.updateOne({ status: 'confirmed' })
+                    .then(() => res.sendStatus(200))
+                    .catch(error => console.log(error))
+                else res.sendStatus(400)
+            }
+            else {
+                order.updateOne({ phone, address })
+                .then(() => res.sendStatus(200))
+                .catch(error => console.log(error))
+            }
+        }).catch(error => {
+            console.log(error)
+            res.sendStatus(400)
+        })
     }
 })
 

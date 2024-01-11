@@ -7,7 +7,7 @@ const Order = new Schema({
     value: Number,
     isPaid: { type: Boolean, default: false },
     address: String,
-    user: String,
+    phone: String,
     createAt: { type: Date, default: Date.now },
     updateAt: { type: Date, default: Date.now }
 })

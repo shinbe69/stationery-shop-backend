@@ -75,7 +75,7 @@ router.post('/getProductsById', (req, res) => {
     })
 })
 //Post a products
-router.post('/createProduct', (req, res) => {
+router.post('/', (req, res) => {
     let name = req.body.name
     let category = req.body.category
     let description = req.body.description

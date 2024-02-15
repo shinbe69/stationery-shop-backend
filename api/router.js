@@ -14,13 +14,13 @@ router.use('/api/users', checkToken, user)
 router.use('/api/orders', order)
 router.use('/api/auth', login)
 
-router.get('/api/getCategories', (req, res) => {
+router.get('/api/category', (req, res) => {
     Category.find({})
     .then(categories => res.json(categories))
     .catch(error => console.log(error))
 })
 
-router.post('/api/createCategory', async (req, res) => {
+router.post('/api/category', async (req, res) => {
     let name = req.body.name
     let thumnail = req.body.thumnail
     if (typeof name !== 'undefined' && typeof thumnail !== 'undefined') {

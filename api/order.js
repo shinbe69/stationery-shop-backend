@@ -6,7 +6,7 @@ const Order = require('../models/Order')
 const User = require('../models/User')
 
 //Get Products
-router.get('/getOrders',  (req, res) => {
+router.get('/',  (req, res) => {
     if(!req.cookies.isAdmin) {
         Order.find({user: req.cookies.user})
         .then(products => {
@@ -31,7 +31,7 @@ router.post('/getOrders', (req, res) => {
     .catch(error => console.log(error))
 })
 //Create an order
-router.post('/createOrder', (req, res) => {
+router.post('/', (req, res) => {
     let phone = req.body.phone
     let items = req.body.items
     let value = req.body.value
